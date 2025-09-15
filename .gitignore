@@ -1,0 +1,17 @@
+*.tar.gz
+*.zip
+*.so
+*.deb
+*.symvers
+*~
+*.swp
+*.swo
+tmp
+logs
+runner
+venv
+.env
+.DS_Store
+.vscode
+.ipynb_checkpoints
+.idea

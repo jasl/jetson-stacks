@@ -1,0 +1,88 @@
+# syntax=docker/dockerfile:1
+
+FROM --platform=$BUILDPLATFORM ubuntu:24.04
+
+WORKDIR /root/tmp
+
+# Base system
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get -y dist-upgrade && \
+    apt-get -y install --no-install-recommends \
+            apt-utils apt-transport-https ca-certificates lsb-release software-properties-common \
+            binutils curl wget gnupg gnupg2 nano zip unzip xz-utils time sshpass ssh-client \
+            libnuma-dev libibverbs-dev \
+            python3 python-is-python3 python3-pip python3-venv python3-setuptools \
+            git git-lfs ccache build-essential cmake llvm-20 clang-20 libclang-20-dev && \
+    apt-get -y autoremove
+
+# UV
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv venv --python 3.12 --seed "/root/.venv"
+
+# This timeout (in seconds) is necessary when installing some dependencies via uv since it's likely to time out
+# Reference: https://github.com/astral-sh/uv/pull/1694
+ENV UV_REQUEST_TIMEOUT=300
+ENV UV_INDEX_STRATEGY="unsafe-best-match"
+# Use copy mode to avoid hardlink failures with Docker cache mounts
+ENV UV_LINK_MODE=copy
+
+ENV VIRTUAL_ENV="/root/.venv"
+ENV PATH="/root/.venv/bin:${PATH}"
+
+# CUDA 13.0
+
+ARG CUDA_VERSION_MAJOR=13
+ARG CUDA_VERSION_MINOR=0
+ARG CUDA_TOOLKIT_PACKAGE="cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}"
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt-get update && \
+    apt-get -y install ${CUDA_TOOLKIT_PACKAGE}
+
+ENV CUDA_ARCH_LIST="110;120;121"
+ENV CUDA_HOME="/usr/local/cuda"
+
+ENV CUDAARCHS="${CUDA_ARCH_LIST}"
+ENV CUDA_ARCHITECTURES="${CUDA_ARCH_LIST}"
+ENV CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}"
+ENV CUDA_BIN_PATH="${CUDA_HOME}/bin"
+ENV NVCC_PATH="${CUDA_BIN_PATH}/nvcc"
+ENV CMAKE_CUDA_COMPILER="${NVCC_PATH}"
+ENV CUDA_NVCC_EXECUTABLE="${NVCC_PATH}"
+ENV CUDACXX="${NVCC_PATH}"
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+
+ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
+ENV LDFLAGS="-L/usr/local/cuda/lib64"
+
+# === Fix -lcuda and CCCL includes ===
+# Ensure that the linker searches stubs first and keeps previous flags
+# CUDA 13 moved thrust/cub to include/cccl
+
+ENV PATH="${CUDA_BIN_PATH}:${PATH}"
+ENV LD_LIBRARY_PATH="${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}"
+ENV LIBRARY_PATH="${CUDA_HOME}/lib64/stubs"
+ENV LDFLAGS="-L${CUDA_HOME}/lib64/stubs -Wl,-rpath,${CUDA_HOME}lib64"
+ENV CPLUS_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
+ENV C_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
+
+# Create symbolic links so that libcuda.so and libcuda.so.1 point to the CUDA stub libraries.
+# This allows linking against CUDA when the actual driver libraries are not available at build time.
+# The '-f' flag forces overwrite if the link or file already exists, and '|| true' prevents the build from failing if linking fails.
+RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || true \
+ && ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so.1 ${CUDA_HOME}/lib64/libcuda.so || true
+
+# Clean up
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /root/tmp
+
+WORKDIR /root
+
+ENTRYPOINT [ "/bin/bash" ]
