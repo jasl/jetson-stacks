@@ -27,7 +27,6 @@ ADD https://github.com/NVIDIA/nccl-tests/archive/refs/tags/v2.17.1.tar.gz ./
 RUN tar -xvf v2.17.1.tar.gz && rm v2.17.1.tar.gz
 RUN (cd /root/nccl-tests-2.17.1 && make -j$(nproc))
 
-
 # ====
 
 FROM --platform=$BUILDPLATFORM ${BASE_IMAGE}
@@ -38,6 +37,7 @@ COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/vectorAdd/vec
 COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/matrixMul/matrixMul .
 COPY --from=builder /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery/deviceQuery .
 COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample .
+COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./
 COPY test.sh .
 
 CMD [ "test.sh" ]
