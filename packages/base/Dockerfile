@@ -57,7 +57,7 @@ RUN dpkg -i cuda-keyring_1.1-1_all.deb && \
     apt-get update && \
     apt-get -y install ${CUDA_TOOLKIT_PACKAGE}
 
-ENV CUDA_ARCH_LIST="110;120;121"
+ENV CUDA_ARCH_LIST="89;110;120;121"
 ENV CUDA_HOME="/usr/local/cuda"
 
 ENV CUDAARCHS="${CUDA_ARCH_LIST}"
@@ -69,6 +69,7 @@ ENV CMAKE_CUDA_COMPILER="${NVCC_PATH}"
 ENV CUDA_NVCC_EXECUTABLE="${NVCC_PATH}"
 ENV CUDACXX="${NVCC_PATH}"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+ENV TORCH_CUDA_ARCH_LIST="8.9 9.0 10.0 12.0"
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L/usr/local/cuda/lib64"
