@@ -5,6 +5,8 @@ FROM --platform=$BUILDPLATFORM ${BASE_IMAGE} AS builder
 
 WORKDIR /root
 
+RUN apt-get update
+
 # CUDA
 
 ADD https://github.com/NVIDIA/cuda-samples/archive/refs/tags/v13.0.tar.gz ./
