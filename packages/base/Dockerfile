@@ -57,7 +57,7 @@ RUN dpkg -i cuda-keyring_1.1-1_all.deb && \
     apt-get update && \
     apt-get -y install ${CUDA_TOOLKIT_PACKAGE}
 
-ENV CUDA_ARCH_LIST="89 90 100 110 120 121"
+ENV CUDA_ARCH_LIST="89;90;100;110;120;121"
 ENV CUDA_HOME="/usr/local/cuda"
 
 ENV CUDAARCHS="${CUDA_ARCH_LIST}"
