@@ -118,11 +118,9 @@ ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubu
 RUN <<EOF
 case $(uname -m) in
     "aarch64")
-        dpkg -i gdrcopy_2.5.1-1_arm64.Ubuntu24_04.deb && \
         dpkg -i libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb
         ;;
     "x86_64")
-        dpkg -i gdrcopy_2.5.1-1_amd64.Ubuntu24_04.deb && \
         dpkg -i libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb
         ;;
     *)
