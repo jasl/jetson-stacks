@@ -34,3 +34,7 @@ echo "=== cudnn_samples_v9/conv_sample ==="
 echo ""
 echo "=== cnccl-tests/all_reduce_perf ==="
 ./all_reduce_perf
+
+echo ""
+echo "=== gdrcopy_apiperf ==="
+./gdrcopy_apiperf

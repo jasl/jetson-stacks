@@ -111,9 +111,7 @@ RUN apt-get -y --no-install-recommends install \
 
 # GDRCopy
 
-ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/gdrcopy_2.5.1-1_arm64.Ubuntu24_04.deb ./
 ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb ./
-ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/gdrcopy_2.5.1-1_amd64.Ubuntu24_04.deb ./
 ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb ./
 RUN <<EOF
 case $(uname -m) in

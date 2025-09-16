@@ -59,6 +59,7 @@ COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/matrixMul/mat
 COPY --from=builder /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery/deviceQuery .
 COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample .
 COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./
+COPY --from=builder /usr/bin/gdrcopy_apiperf ./
 COPY test.sh .
 
 CMD [ "test.sh" ]
