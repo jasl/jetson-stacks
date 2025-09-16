@@ -29,6 +29,25 @@ ADD https://github.com/NVIDIA/nccl-tests/archive/refs/tags/v2.17.1.tar.gz ./
 RUN tar -xvf v2.17.1.tar.gz && rm v2.17.1.tar.gz
 RUN (cd /root/nccl-tests-2.17.1 && make -j$(nproc))
 
+# GDRCopy
+
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/gdrcopy-tests_2.5.1-1_arm64.Ubuntu24_04+cuda13.0.deb ./
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/gdrcopy-tests_2.5.1-1_amd64.Ubuntu24_04+cuda13.0.deb ./
+RUN <<EOF
+case $(uname -m) in
+    "aarch64")
+        dpkg -i gdrcopy-tests_2.5.1-1_arm64.Ubuntu24_04+cuda13.0.deb
+        ;;
+    "x86_64")
+        dpkg -i gdrcopy-tests_2.5.1-1_amd64.Ubuntu24_04+cuda13.0.deb
+        ;;
+    *)
+        echo "Unsupported arch $(uname -m)"
+        exit 1
+        ;;
+esac
+EOF
+
 # ====
 
 FROM --platform=$BUILDPLATFORM ${BASE_IMAGE}

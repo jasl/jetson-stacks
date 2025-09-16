@@ -39,13 +39,15 @@ ARG CUDA_VERSION_MAJOR=13
 ARG CUDA_VERSION_MINOR=0
 ARG CUDA_TOOLKIT_PACKAGE="cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}"
 
+ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb ./sbsa-cuda-keyring_1.1-1_all.deb
+ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb ./x86_64-cuda-keyring_1.1-1_all.deb
 RUN <<EOF
 case $(uname -m) in
     "aarch64")
-        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb
+        dpkg -i sbsa-cuda-keyring_1.1-1_all.deb
         ;;
     "x86_64")
-        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+        dpkg -i x86_64-cuda-keyring_1.1-1_all.deb
         ;;
     *)
         echo "Unsupported arch $(uname -m)"
@@ -53,8 +55,7 @@ case $(uname -m) in
         ;;
 esac
 EOF
-RUN dpkg -i cuda-keyring_1.1-1_all.deb && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get -y install ${CUDA_TOOLKIT_PACKAGE}
 
 ENV CUDA_ARCH_LIST="89;90;100;110;120;121"
@@ -107,6 +108,29 @@ RUN apt-get -y --no-install-recommends install \
 
 RUN apt-get -y --no-install-recommends install \
         libnccl2 libnccl-dev
+
+# GDRCopy
+
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/gdrcopy_2.5.1-1_arm64.Ubuntu24_04.deb ./
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb ./
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/gdrcopy_2.5.1-1_amd64.Ubuntu24_04.deb ./
+ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb ./
+RUN <<EOF
+case $(uname -m) in
+    "aarch64")
+        dpkg -i gdrcopy_2.5.1-1_arm64.Ubuntu24_04.deb && \
+        dpkg -i libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb
+        ;;
+    "x86_64")
+        dpkg -i gdrcopy_2.5.1-1_amd64.Ubuntu24_04.deb && \
+        dpkg -i libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb
+        ;;
+    *)
+        echo "Unsupported arch $(uname -m)"
+        exit 1
+        ;;
+esac
+EOF
 
 # Clean up
 
