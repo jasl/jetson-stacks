@@ -16,13 +16,21 @@ echo "=== Supported GPU architectures by nvcc ==="
 nvcc --list-gpu-arch
 
 echo ""
-echo "=== CUDA Samples/1_Utilities/deviceQuery ==="
+echo "=== cuda-samples-13.0/1_Utilities/deviceQuery ==="
 ./deviceQuery
 
 echo ""
-echo "=== CUDA Samples/0_Introduction/vectorAdd ==="
+echo "=== cuda-samples-13.0/0_Introduction/vectorAdd ==="
 ./vectorAdd
 
 echo ""
-echo "=== CUDA Samples/0_Introduction/matrixMul ==="
+echo "=== cuda-samples-13.0/0_Introduction/matrixMul ==="
 ./matrixMul
+
+echo ""
+echo "=== cudnn_samples_v9/conv_sample ==="
+./conv_sample
+
+echo ""
+echo "=== cnccl-tests/all_reduce_perf ==="
+./all_reduce_perf

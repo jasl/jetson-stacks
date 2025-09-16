@@ -10,12 +10,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get -y install --no-install-recommends \
-            apt-utils apt-transport-https ca-certificates lsb-release software-properties-common \
-            binutils curl wget gnupg gnupg2 nano vim zip unzip xz-utils time sshpass ssh-client \
-            libnuma-dev libibverbs-dev \
-            python3 python-is-python3 python3-pip python3-venv python3-setuptools \
-            git git-lfs ccache build-essential cmake llvm-20 clang-20 libclang-20-dev && \
+    apt-get -y --no-install-recommends install \
+        apt-utils apt-transport-https ca-certificates lsb-release software-properties-common \
+        binutils curl wget gnupg gnupg2 nano vim zip unzip xz-utils time sshpass ssh-client \
+        libnuma-dev libibverbs-dev \
+        python3 python-is-python3 python3-pip python3-venv python3-setuptools \
+        git git-lfs ccache build-essential cmake llvm-20 clang-20 libclang-20-dev && \
     apt-get -y autoremove
 
 # UV
@@ -39,8 +39,21 @@ ARG CUDA_VERSION_MAJOR=13
 ARG CUDA_VERSION_MINOR=0
 ARG CUDA_TOOLKIT_PACKAGE="cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}"
 
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb && \
-    dpkg -i cuda-keyring_1.1-1_all.deb && \
+RUN <<EOF
+case $(uname -m) in
+    "aarch64")
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb
+        ;;
+    "x86_64")
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+        ;;
+    *)
+        echo "Unsupported arch $(uname -m)"
+        exit 1
+        ;;
+esac
+EOF
+RUN dpkg -i cuda-keyring_1.1-1_all.deb && \
     apt-get update && \
     apt-get -y install ${CUDA_TOOLKIT_PACKAGE}
 
@@ -76,6 +89,16 @@ ENV C_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
 # The '-f' flag forces overwrite if the link or file already exists, and '|| true' prevents the build from failing if linking fails.
 RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || true \
  && ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so.1 ${CUDA_HOME}/lib64/libcuda.so || true
+
+# CUDNN
+
+RUN apt-get -y --no-install-recommends install \
+        libcudnn9-cuda-${CUDA_VERSION_MAJOR} libcudnn9-dev-cuda-${CUDA_VERSION_MAJOR}
+
+# NCCL
+
+RUN apt-get -y --no-install-recommends install \
+        libnccl2 libnccl-dev
 
 # Clean up
 

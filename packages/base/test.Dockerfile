@@ -5,14 +5,28 @@ FROM --platform=$BUILDPLATFORM ${BASE_IMAGE} AS builder
 
 WORKDIR /root
 
+# CUDA
+
 ADD https://github.com/NVIDIA/cuda-samples/archive/refs/tags/v13.0.tar.gz ./
 RUN tar -xvf v13.0.tar.gz && rm v13.0.tar.gz
 
-WORKDIR /root/cuda-samples-13.0
+RUN (cd /root/cuda-samples-13.0/Samples/0_Introduction/vectorAdd && cmake . && make -j$(nproc))
+RUN (cd /root/cuda-samples-13.0/Samples/0_Introduction/matrixMul && cmake . && make -j$(nproc))
+RUN (cd /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery && cmake . && make -j$(nproc))
 
-RUN (cd Samples/0_Introduction/vectorAdd && cmake . && make)
-RUN (cd Samples/0_Introduction/matrixMul && cmake . && make)
-RUN (cd Samples/1_Utilities/deviceQuery && cmake . && make)
+# CUDNN
+
+RUN apt-get -y --no-install-recommends install \
+        libcudnn9-samples
+
+RUN (cd /usr/src/cudnn_samples_v9/conv_sample && make -j$(nproc))
+
+# NCCL
+
+ADD https://github.com/NVIDIA/nccl-tests/archive/refs/tags/v2.17.1.tar.gz ./
+RUN tar -xvf v2.17.1.tar.gz && rm v2.17.1.tar.gz
+RUN (cd /root/nccl-tests-2.17.1 && make -j$(nproc))
+
 
 # ====
 
@@ -23,6 +37,7 @@ WORKDIR /root
 COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/vectorAdd/vectorAdd .
 COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/matrixMul/matrixMul .
 COPY --from=builder /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery/deviceQuery .
+COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample .
 COPY test.sh .
 
 CMD [ "test.sh" ]
