@@ -48,7 +48,7 @@ case $(uname -m) in
 esac
 EOF
 
-COPY cuSPARSELt ./
+COPY ./cuSPARSELt ./cuSPARSELt
 RUN export CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/
 RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13)
 
