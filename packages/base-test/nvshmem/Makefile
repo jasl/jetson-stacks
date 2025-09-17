@@ -15,8 +15,8 @@ endif
 GENCODE_SM89    := -gencode=arch=compute_89,code=sm_89
 GENCODE_SM90    := -gencode=arch=compute_90,code=sm_90
 GENCODE_SM100   := -gencode=arch=compute_100f,code=sm_100
-# GENCODE_SM110   := -gencode=arch=compute_110f,code=sm_100 # NVSHMEM doesn't support Jetson families
-GENCODE_SM120   := -gencode=arch=compute_120f,code=sm_100
+# GENCODE_SM110   := -gencode=arch=compute_110f,code=sm_110 # NVSHMEM doesn't support Jetson families
+GENCODE_SM120   := -gencode=arch=compute_120f,code=sm_120
 GENCODE_FLAGS	:= $(GENCODE_SM89) $(GENCODE_SM90) $(GENCODE_SM100) $(GENCODE_SM120)
 
 ifdef DISABLE_CUB
