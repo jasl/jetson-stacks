@@ -3,6 +3,8 @@ NP ?= 1
 NVCC=nvcc
 MPIRUN ?= mpirun
 CUDA_HOME ?= /usr/local/cuda
+NVSHMEM_LIB_PATH ?= /usr/lib/$(uname -m)-linux-gnu/nvshmem/13
+NVSHMEM_INCLUDE_PATH ?= /usr/include/nvshmem
 ifndef NVSHMEM_LIB_PATH
 $(error NVSHMEM_LIB_PATH is not set)
 endif
@@ -26,29 +28,29 @@ endif
 GENCODE_FLAGS	:= $(NVCC_GENCODE) # $(GENCODE_SM70) $(GENCODE_SM80) $(GENCODE_SM90)
 
 ifdef DISABLE_CUB
-        NVCC_FLAGS = -Xptxas --optimize-float-atomics
+	NVCC_FLAGS = -Xptxas --optimize-float-atomics
 else
-        NVCC_FLAGS = -DHAVE_CUB
+	NVCC_FLAGS = -DHAVE_CUB
 endif
 NVCC_FLAGS += -ccbin=mpic++ -dc -Xcompiler -fopenmp -lineinfo -DUSE_NVTX -ldl $(GENCODE_FLAGS) -std=c++17 -I$(NVSHMEM_INCLUDE_PATH)
 NVCC_LDFLAGS = -ccbin=mpic++ -L$(NVSHMEM_LIB_PATH) -lnvshmem -L$(CUDA_HOME)/lib64 -lcuda -lcudart -ldl -lnvidia-ml
 ifdef USE_LTO
-        NVCC_FLAGS += -maxrregcount=32
-        NVCC_LDFLAGS += -maxrregcount=32 -dlto
+	NVCC_FLAGS += -maxrregcount=32
+	NVCC_LDFLAGS += -maxrregcount=32 -dlto
 endif
 jacobi: Makefile jacobi.cu
-        $(NVCC) $(NVCC_FLAGS) jacobi.cu -c -o jacobi.o
-        $(NVCC) $(GENCODE_FLAGS) jacobi.o -o jacobi $(NVCC_LDFLAGS)
+	$(NVCC) $(NVCC_FLAGS) jacobi.cu -c -o jacobi.o
+	$(NVCC) $(GENCODE_FLAGS) jacobi.o -o jacobi $(NVCC_LDFLAGS)
 
 .PHONY.: clean
 clean:
-        rm -f jacobi jacobi.o *.nsys-rep jacobi.*.compute-sanitizer.log
+	rm -f jacobi jacobi.o *.nsys-rep jacobi.*.compute-sanitizer.log
 
 sanitize: jacobi
-        $(MPIRUN) -np $(NP) compute-sanitizer --log-file jacobi.%q{OMPI_COMM_WORLD_RANK}.compute-sanitizer.log ./jacobi -niter 10
+	$(MPIRUN) -np $(NP) compute-sanitizer --log-file jacobi.%q{OMPI_COMM_WORLD_RANK}.compute-sanitizer.log ./jacobi -niter 10
 
 run: jacobi
-        $(MPIRUN) --allow-run-as-root -np $(NP) ./jacobi
+	$(MPIRUN) --allow-run-as-root -np $(NP) ./jacobi
 
 profile: jacobi
-        $(MPIRUN) -np $(NP) nsys profile --trace=mpi,cuda,nvtx -o jacobi.%q{OMPI_COMM_WORLD_RANK} ./jacobi -niter 10
+	$(MPIRUN) -np $(NP) nsys profile --trace=mpi,cuda,nvtx -o jacobi.%q{OMPI_COMM_WORLD_RANK} ./jacobi -niter 10
