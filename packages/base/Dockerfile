@@ -141,6 +141,7 @@ EOF
 
 RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
+RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
 ## NVSHMEM
 

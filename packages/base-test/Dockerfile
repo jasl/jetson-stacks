@@ -49,8 +49,7 @@ esac
 EOF
 
 COPY ./cuSPARSELt ./cuSPARSELt
-RUN export CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/
-RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13)
+RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu CUDA_TOOLKIT_PATH=$(CUDA_HOME))
 
 # ====
 
@@ -64,7 +63,7 @@ COPY --from=builder /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery/devi
 COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample ./cudnn_conv_sample
 COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./nccl_all_reduce_perf
 COPY --from=builder /usr/bin/apiperf ./gdrcopy_apiperf
-COPY --from=builder /root/cuSPARSELt/matmul ./cuSPARSELt_matmul
+COPY --from=builder /root/cuSPARSELt/matmul_example ./cuSPARSELt_matmul
 COPY test.sh .
 
 CMD [ "test.sh" ]
