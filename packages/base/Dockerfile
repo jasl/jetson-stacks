@@ -130,7 +130,7 @@ EOF
 
 ## NVPL
 
-RUN [ $(uname -m) = aarch64 ] && \
+RUN [ "$(uname -m)" = aarch64 ] && \
     apt-get -y --no-install-recommends install \
         nvpl
 
