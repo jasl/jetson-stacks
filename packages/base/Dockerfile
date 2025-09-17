@@ -73,8 +73,7 @@ ENV CUDACXX="${NVCC_PATH}"
 ENV NVCC_GENCODE="-gencode=arch=compute_90,code=sm_90 \
 		-gencode=arch=compute_100f,code=sm_100 \
         -gencode=arch=compute_110f,code=sm_110 \
-		-gencode=arch=compute_120f,code=sm_120 \
-        -gencode=arch=compute_121,code=sm_121"
+		-gencode=arch=compute_120f,code=sm_120"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
 ENV TORCH_CUDA_ARCH_LIST="8.9 9.0 10.0 11.0 12.0"
 ENV NVIDIA_VISIBLE_DEVICES=all
