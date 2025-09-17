@@ -142,6 +142,11 @@ EOF
 RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
 
+## NVSHMEM
+
+RUN apt-get -y --no-install-recommends install \
+        nvshmem-cuda-${CUDA_VERSION_MAJOR}
+
 # Clean up
 
 RUN apt-get clean && \
