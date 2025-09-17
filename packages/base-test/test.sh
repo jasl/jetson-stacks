@@ -17,24 +17,28 @@ nvcc --list-gpu-arch
 
 echo ""
 echo "=== cuda-samples-13.0/1_Utilities/deviceQuery ==="
-./deviceQuery
+./cuda_deviceQuery
 
 echo ""
 echo "=== cuda-samples-13.0/0_Introduction/vectorAdd ==="
-./vectorAdd
+./cuda_vectorAdd
 
 echo ""
 echo "=== cuda-samples-13.0/0_Introduction/matrixMul ==="
-./matrixMul
+./cuda_matrixMul
 
 echo ""
 echo "=== cudnn_samples_v9/conv_sample ==="
-./conv_sample
+./cudnn_conv_sample
 
 echo ""
-echo "=== cnccl-tests/all_reduce_perf ==="
-./all_reduce_perf
+echo "=== nccl-tests/all_reduce_perf ==="
+./nccl_all_reduce_perf
 
 echo ""
-echo "=== gdrcopy_apiperf ==="
+echo "=== gdrcopy/tests/apiperf ==="
 ./gdrcopy_apiperf
+
+echo ""
+echo "=== cuSPARSELt/matmul ==="
+./cuSPARSELt_matmul

@@ -1,7 +1,8 @@
-# Jetson Stacks
+# Jetson stacks
 
 Under construction...
 
 ## License
 
-MIT License.
+Jetson stacks is released under the MIT License.
+Bundled third party codes or dependencies released under their own licenses.

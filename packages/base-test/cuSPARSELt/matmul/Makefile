@@ -1,0 +1,44 @@
+#******************************************************************************
+# * Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# *
+# * NVIDIA CORPORATION and its licensors retain all intellectual property
+# * and proprietary rights in and to this software, related documentation
+# * and any modifications thereto.  Any use, reproduction, disclosure or
+# * distribution of this software and related documentation without an express
+# * license agreement from NVIDIA CORPORATION is strictly prohibited.
+# ******************************************************************************
+
+all: check-vars matmul_example matmul_example_static
+
+check-vars:
+ifndef CUSPARSELT_INCLUDE_PATH
+	${error CUSPARSELT_INCLUDE_PATH must be set}
+endif
+ifndef CUSPARSELT_LIB_PATH
+	${error CUSPARSELT_LIB_PATH must be set}
+endif
+ifndef CUDA_TOOLKIT_PATH
+	${error CUDA_TOOLKIT_PATH must be set}
+endif
+
+INCS := -I$(CUDA_TOOLKIT_PATH)/include -I${CUSPARSELT_INCLUDE_PATH}
+LIBS := -lcusparse -ldl
+NVCC := ${CUDA_TOOLKIT_PATH}/bin/nvcc
+
+matmul_example: matmul_example.cpp
+	${NVCC} --std=c++14  ${INCS}  matmul_example.cpp -o matmul_example            \
+		 -L${CUSPARSELT_LIB_PATH}  -lcusparseLt ${LIBS}
+
+matmul_example_static: matmul_example.cpp
+	${NVCC} --std=c++14 ${INCS} matmul_example.cpp -o matmul_example_static       \
+         -L${CUSPARSELT_LIB_PATH} -lcusparseLt_static ${LIBS}
+
+test:
+	@echo "\n==== cusparseLt Matmul Test ====\n"
+	./matmul_example
+	./matmul_example_static
+
+clean:
+	rm -f matmul_example matmul_example_static
+
+.PHONY: clean all test
