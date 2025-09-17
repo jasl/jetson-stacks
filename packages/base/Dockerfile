@@ -130,8 +130,22 @@ EOF
 
 ## NVPL
 
-RUN apt-get -y --no-install-recommends install \
-        nvpl
+RUN <<EOF
+case $(uname -m) in
+    "aarch64")
+        dpkg -i libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb
+        ;;
+    "x86_64")
+        dpkg -i libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb
+        ;;
+    *)
+        echo "Unsupported arch $(uname -m)"
+        exit 1
+        ;;
+esac
+EOF
+RUN [ $(uname -m) = aarch64 ]; \
+    apt-get -y --no-install-recommends install nvpl
 
 ## cuSPARSELt
 
