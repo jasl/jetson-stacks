@@ -42,3 +42,7 @@ echo "=== gdrcopy/tests/apiperf ==="
 echo ""
 echo "=== cuSPARSELt/matmul ==="
 ./cuSPARSELt_matmul
+
+echo ""
+echo "=== NVSHMEM/jacobi ==="
+mpirun --allow-run-as-root -np 1 ./nvshmem_jacobi

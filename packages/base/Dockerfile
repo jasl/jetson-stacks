@@ -147,7 +147,7 @@ RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-li
 ## NVSHMEM
 
 RUN apt-get -y --no-install-recommends install \
-        nvshmem-cuda-${CUDA_VERSION_MAJOR}
+        nvshmem-cuda-${CUDA_VERSION_MAJOR} openmpi-bin libopenmpi-dev
 
 # Clean up
 
