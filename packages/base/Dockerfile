@@ -144,8 +144,7 @@ case $(uname -m) in
         ;;
 esac
 EOF
-RUN [ $(uname -m) = aarch64 ]; \
-    apt-get -y --no-install-recommends install nvpl
+RUN [ $(uname -m) = aarch64 ]; apt-get -y --no-install-recommends install nvpl
 
 ## cuSPARSELt
 
