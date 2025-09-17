@@ -49,7 +49,7 @@ esac
 EOF
 
 COPY ./cuSPARSELt ./cuSPARSELt
-RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu CUDA_TOOLKIT_PATH=$(CUDA_HOME))
+RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
 
 # ====
 
