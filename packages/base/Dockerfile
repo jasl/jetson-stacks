@@ -71,13 +71,14 @@ ENV CUDA_NVCC_EXECUTABLE="${NVCC_PATH}"
 ENV CUDACXX="${NVCC_PATH}"
 
 ENV NVCC_GENCODE="-gencode=arch=compute_90,code=sm_90 \
-		-gencode=arch=compute_100,code=sm_100 \
-        -gencode=arch=compute_110,code=sm_110 \
-		-gencode=arch=compute_120,code=sm_120 \
-		-gencode=arch=compute_120,code=compute_120 \
+		-gencode=arch=compute_100f,code=sm_100 \
+        -gencode=arch=compute_110f,code=sm_110 \
+		-gencode=arch=compute_120f,code=sm_120 \
         -gencode=arch=compute_121,code=sm_121"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV TORCH_CUDA_ARCH_LIST="8.9 9.0 10.0 10.3 11.0 12.0"
+ENV TORCH_CUDA_ARCH_LIST="8.9 9.0 10.0 11.0 12.0"
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L/usr/local/cuda/lib64"
@@ -127,6 +128,16 @@ case $(uname -m) in
         ;;
 esac
 EOF
+
+## NVPL
+
+RUN apt-get -y --no-install-recommends install \
+        nvpl
+
+## cuSPARSELt
+
+RUN apt-get -y --no-install-recommends install \
+        cusparselt-cuda-${CUDA_VERSION_MAJOR}
 
 # Clean up
 
