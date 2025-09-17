@@ -51,9 +51,8 @@ EOF
 COPY ./cuSPARSELt ./cuSPARSELt
 RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
 
-# TODO: NVSHMEM seems not support Thor family yet
-# COPY ./nvshmem ./nvshmem
-# RUN (cd /root/nvshmem && make NVSHMEM_INCLUDE_PATH=/usr/include/nvshmem NVSHMEM_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/nvshmem/13)
+COPY ./nvshmem ./nvshmem
+RUN (cd /root/nvshmem && make NVSHMEM_INCLUDE_PATH=/usr/include/nvshmem NVSHMEM_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/nvshmem/13)
 
 # ====
 
@@ -68,7 +67,7 @@ COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample ./cudnn_co
 COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./nccl_all_reduce_perf
 COPY --from=builder /usr/bin/apiperf ./gdrcopy_apiperf
 COPY --from=builder /root/cuSPARSELt/matmul/matmul_example ./cuSPARSELt_matmul
-# COPY --from=builder /root/nvshmem/jacobi ./nvshmem_jacobi
+COPY --from=builder /root/nvshmem/jacobi ./nvshmem_jacobi
 COPY test.sh .
 
 CMD [ "test.sh" ]

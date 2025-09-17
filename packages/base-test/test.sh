@@ -43,7 +43,6 @@ echo ""
 echo "=== cuSPARSELt/matmul ==="
 ./cuSPARSELt_matmul
 
-# TODO: NVSHMEM seems not support Thor family yet
-# echo ""
-# echo "=== NVSHMEM/jacobi ==="
-# mpirun --allow-run-as-root -np 1 ./nvshmem_jacobi
+echo ""
+echo "=== NVSHMEM/jacobi ==="
+mpirun --allow-run-as-root -np 1 ./nvshmem_jacobi
