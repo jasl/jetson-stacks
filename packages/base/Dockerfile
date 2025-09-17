@@ -130,9 +130,12 @@ EOF
 
 ## NVPL
 
-RUN [ "$(uname -m)" = aarch64 ] && \
+RUN <<EOF
+if [ "$(uname -m)" = aarch64 ]; then
     apt-get -y --no-install-recommends install \
         nvpl
+fi
+EOF
 
 ## cuSPARSELt
 
