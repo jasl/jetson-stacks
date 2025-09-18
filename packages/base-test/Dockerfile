@@ -51,6 +51,9 @@ EOF
 COPY ./cuSPARSELt ./cuSPARSELt
 RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
 
+COPY ./cuDSS ./cuDSS
+RUN (cd /root/cuDSS/simple && cmake . && make)
+
 COPY ./nvshmem ./nvshmem
 RUN (cd /root/nvshmem && make NVSHMEM_INCLUDE_PATH=/usr/include/nvshmem NVSHMEM_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/nvshmem/13)
 

@@ -77,7 +77,7 @@ ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
     -gencode=arch=compute_110f,code=sm_110 \
     -gencode=arch=compute_120f,code=sm_120"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV TORCH_CUDA_ARCH_LIST="8.9 9.0 10.0 11.0 12.0"
+ENV TORCH_CUDA_ARCH_LIST="8.0;9.0;10.0;11.0;12.0+PTX"
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
@@ -130,6 +130,17 @@ case $(uname -m) in
 esac
 EOF
 
+## cuSPARSELt
+
+RUN apt-get -y --no-install-recommends install \
+        cusparselt-cuda-${CUDA_VERSION_MAJOR}
+RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
+
+## cuDSS
+
+RUN apt-get -y --no-install-recommends install \
+        cudss
+
 ## NVPL
 
 RUN <<EOF
@@ -138,12 +149,6 @@ if [ "$(uname -m)" = aarch64 ]; then
         nvpl
 fi
 EOF
-
-## cuSPARSELt
-
-RUN apt-get -y --no-install-recommends install \
-        cusparselt-cuda-${CUDA_VERSION_MAJOR}
-RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
 ## NVSHMEM
 
