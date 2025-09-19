@@ -81,7 +81,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
-ENV LDFLAGS="-L/usr/local/cuda/lib64"
+ENV LDFLAGS="-L${CUDA_HOME}/lib64"
 
 # === Fix -lcuda and CCCL includes ===
 # Ensure that the linker searches stubs first and keeps previous flags
