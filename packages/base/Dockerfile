@@ -98,7 +98,7 @@ ENV C_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
 # This allows linking against CUDA when the actual driver libraries are not available at build time.
 # The '-f' flag forces overwrite if the link or file already exists, and '|| true' prevents the build from failing if linking fails.
 RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || true \
- && ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so.1 ${CUDA_HOME}/lib64/libcuda.so || true
+    && ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so.1 ${CUDA_HOME}/lib64/libcuda.so || true
 
 # CUDNN
 
