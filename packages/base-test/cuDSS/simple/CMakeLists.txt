@@ -55,7 +55,7 @@ project("cuDSS_${EXAMPLE_NAME}_example"
         HOMEPAGE_URL "https://docs.nvidia.com/cuda/cudss/index.html"
         LANGUAGES    CXX CUDA)
 
-set(CMAKE_CUDA_STANDARD          11)
+set(CMAKE_CUDA_STANDARD          17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_EXTENSIONS        OFF)
 

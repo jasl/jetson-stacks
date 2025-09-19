@@ -111,35 +111,11 @@ RUN apt-get -y --no-install-recommends install \
 RUN apt-get -y --no-install-recommends install \
         libnccl2 libnccl-dev
 
-# GDRCopy
-
-ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/aarch64/libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb ./
-ADD https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2013.0/ubuntu24_04/x64/libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb ./
-RUN <<EOF
-case $(uname -m) in
-    "aarch64")
-        dpkg -i libgdrapi_2.5.1-1_arm64.Ubuntu24_04.deb
-        ;;
-    "x86_64")
-        dpkg -i libgdrapi_2.5.1-1_amd64.Ubuntu24_04.deb
-        ;;
-    *)
-        echo "Unsupported arch $(uname -m)"
-        exit 1
-        ;;
-esac
-EOF
-
 ## cuSPARSELt
 
 RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
-
-## cuDSS
-
-RUN apt-get -y --no-install-recommends install \
-        cudss
 
 ## NVPL
 
@@ -149,6 +125,12 @@ if [ "$(uname -m)" = aarch64 ]; then
         nvpl
 fi
 EOF
+
+## cuDSS
+
+# # TODO: cuDSS doesn't support CUDA 13 yet
+# RUN apt-get -y --no-install-recommends install \
+#         cudss
 
 ## NVSHMEM
 
