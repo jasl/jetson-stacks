@@ -16,6 +16,10 @@ echo "=== Supported GPU architectures by nvcc ==="
 nvcc --list-gpu-arch
 
 echo ""
+echo "=== gcc version ==="
+gcc --version
+
+echo ""
 echo "=== cuda-samples-13.0/1_Utilities/deviceQuery ==="
 ./cuda_deviceQuery
 
