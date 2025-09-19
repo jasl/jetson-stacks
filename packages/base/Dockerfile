@@ -90,7 +90,7 @@ ENV LDFLAGS="-L/usr/local/cuda/lib64"
 ENV PATH="$(CUDA_BIN_PATH):$(PATH)"
 ENV LD_LIBRARY_PATH="$(CUDA_HOME)/lib64/stubs:$(LD_LIBRARY_PATH)"
 ENV LIBRARY_PATH="$(CUDA_HOME)/lib64/stubs"
-ENV LDFLAGS="-L$(CUDA_HOME)/lib64/stubs -Wl,-rpath,$(CUDA_HOME)lib64"
+ENV LDFLAGS="-L$(CUDA_HOME)/lib64/stubs -Wl,-rpath,$(CUDA_HOME)/lib64"
 ENV CPLUS_INCLUDE_PATH="$(CUDA_HOME)/include/cccl"
 ENV C_INCLUDE_PATH="$(CUDA_HOME)/include/cccl"
 
