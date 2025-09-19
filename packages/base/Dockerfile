@@ -31,7 +31,7 @@ ENV UV_INDEX_STRATEGY="unsafe-best-match"
 ENV UV_LINK_MODE=copy
 
 ENV VIRTUAL_ENV="/root/.venv"
-ENV PATH="/root/.venv/bin:$(PATH)"
+ENV PATH="/root/.venv/bin:${PATH}"
 
 # CUDA 13.0
 
@@ -55,20 +55,20 @@ case $(uname -m) in
 esac
 EOF
 RUN apt-get update && \
-    apt-get -y install cuda-toolkit-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)
+    apt-get -y install cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
 
 ENV CUDA_ARCH_LIST="89;90;100;110;120;121"
 ENV CUDA_HOME="/usr/local/cuda"
 
-ENV CUDAARCHS="$(CUDA_ARCH_LIST)"
-ENV CUDA_ARCHITECTURES="$(CUDA_ARCH_LIST)"
-ENV CUDA_TOOLKIT_PATH="$(CUDA_HOME)"
-ENV CUDA_TOOLKIT_ROOT_DIR="$(CUDA_HOME)"
-ENV CUDA_BIN_PATH="$(CUDA_HOME)/bin"
-ENV NVCC_PATH="$(CUDA_BIN_PATH)/nvcc"
-ENV CMAKE_CUDA_COMPILER="$(NVCC_PATH)"
-ENV CUDA_NVCC_EXECUTABLE="$(NVCC_PATH)"
-ENV CUDACXX="$(NVCC_PATH)"
+ENV CUDAARCHS="${CUDA_ARCH_LIST}"
+ENV CUDA_ARCHITECTURES="${CUDA_ARCH_LIST}"
+ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"
+ENV CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}"
+ENV CUDA_BIN_PATH="${CUDA_HOME}/bin"
+ENV NVCC_PATH="${CUDA_BIN_PATH}/nvcc"
+ENV CMAKE_CUDA_COMPILER="${NVCC_PATH}"
+ENV CUDA_NVCC_EXECUTABLE="${NVCC_PATH}"
+ENV CUDACXX="${NVCC_PATH}"
 
 ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
     -gencode=arch=compute_90,code=sm_90 \
@@ -80,30 +80,30 @@ ENV TORCH_CUDA_ARCH_LIST="8.0;9.0;10.0;11.0;12.0+PTX"
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
-ENV LD_LIBRARY_PATH="$(CUDA_HOME)/compat:$(CUDA_HOME)/lib64"
+ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L/usr/local/cuda/lib64"
 
 # === Fix -lcuda and CCCL includes ===
 # Ensure that the linker searches stubs first and keeps previous flags
 # CUDA 13 moved thrust/cub to include/cccl
 
-ENV PATH="$(CUDA_BIN_PATH):$(PATH)"
-ENV LD_LIBRARY_PATH="$(CUDA_HOME)/lib64/stubs:$(LD_LIBRARY_PATH)"
-ENV LIBRARY_PATH="$(CUDA_HOME)/lib64/stubs"
-ENV LDFLAGS="-L$(CUDA_HOME)/lib64/stubs -Wl,-rpath,$(CUDA_HOME)/lib64"
-ENV CPLUS_INCLUDE_PATH="$(CUDA_HOME)/include/cccl"
-ENV C_INCLUDE_PATH="$(CUDA_HOME)/include/cccl"
+ENV PATH="${CUDA_BIN_PATH}:${PATH}"
+ENV LD_LIBRARY_PATH="${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}"
+ENV LIBRARY_PATH="${CUDA_HOME}/lib64/stubs"
+ENV LDFLAGS="-L${CUDA_HOME}/lib64/stubs -Wl,-rpath,${CUDA_HOME}/lib64"
+ENV CPLUS_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
+ENV C_INCLUDE_PATH="${CUDA_HOME}/include/cccl"
 
 # Create symbolic links so that libcuda.so and libcuda.so.1 point to the CUDA stub libraries.
 # This allows linking against CUDA when the actual driver libraries are not available at build time.
 # The '-f' flag forces overwrite if the link or file already exists, and '|| true' prevents the build from failing if linking fails.
-RUN ln -sf $(CUDA_HOME)/lib64/stubs/libcuda.so $(CUDA_HOME)/lib64/libcuda.so || true \
- && ln -sf $(CUDA_HOME)/lib64/stubs/libcuda.so.1 $(CUDA_HOME)/lib64/libcuda.so || true
+RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || true \
+ && ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so.1 ${CUDA_HOME}/lib64/libcuda.so || true
 
 # CUDNN
 
 RUN apt-get -y --no-install-recommends install \
-        libcudnn9-cuda-$(CUDA_VERSION_MAJOR) libcudnn9-dev-cuda-$(CUDA_VERSION_MAJOR)
+        libcudnn9-cuda-${CUDA_VERSION_MAJOR} libcudnn9-dev-cuda-${CUDA_VERSION_MAJOR}
 
 # NCCL
 
@@ -113,7 +113,7 @@ RUN apt-get -y --no-install-recommends install \
 ## cuSPARSELt
 
 RUN apt-get -y --no-install-recommends install \
-        cusparselt-cuda-$(CUDA_VERSION_MAJOR)
+        cusparselt-cuda-${CUDA_VERSION_MAJOR}
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
 ## cuDSS
@@ -124,12 +124,12 @@ RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-li
 
 ## cuTensor
 RUN apt-get -y --no-install-recommends install \
-        cutensor-cuda-$(CUDA_VERSION_MAJOR)
+        cutensor-cuda-${CUDA_VERSION_MAJOR}
 
 ## NVSHMEM
 
 RUN apt-get -y --no-install-recommends install \
-        nvshmem-cuda-$(CUDA_VERSION_MAJOR) openmpi-bin libopenmpi-dev
+        nvshmem-cuda-${CUDA_VERSION_MAJOR} openmpi-bin libopenmpi-dev
 
 # GDRCopy
 
