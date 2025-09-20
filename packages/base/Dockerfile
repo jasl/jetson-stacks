@@ -105,11 +105,6 @@ RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || 
 RUN apt-get -y --no-install-recommends install \
         libcudnn9-cuda-${CUDA_VERSION_MAJOR} libcudnn9-dev-cuda-${CUDA_VERSION_MAJOR}
 
-# NCCL
-
-RUN apt-get -y --no-install-recommends install \
-        libnccl2 libnccl-dev
-
 ## cuSPARSELt
 
 RUN apt-get -y --no-install-recommends install \
@@ -130,6 +125,11 @@ RUN apt-get -y --no-install-recommends install \
 ## cuTensor
 RUN apt-get -y --no-install-recommends install \
         cutensor-cuda-${CUDA_VERSION_MAJOR}
+
+# NCCL
+
+RUN apt-get -y --no-install-recommends install \
+        libnccl2 libnccl-dev
 
 ## NVSHMEM
 

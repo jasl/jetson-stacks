@@ -23,11 +23,24 @@ RUN apt-get -y --no-install-recommends install \
 
 RUN (cd /usr/src/cudnn_samples_v9/conv_sample && make -j$(nproc))
 
+COPY ./cuSPARSELt ./cuSPARSELt
+RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
+
+COPY ./cuBLAS ./cuBLAS
+RUN (cd /root/cuBLAS/gemm && cmake . && make)
+
+# # TODO: cuDSS doesn't support CUDA 13 yet
+# COPY ./cuDSS ./cuDSS
+# RUN (cd /root/cuDSS/simple && cmake . && make)
+
 # NCCL
 
 ADD https://github.com/NVIDIA/nccl-tests/archive/refs/tags/v2.17.1.tar.gz ./
 RUN tar -xvf v2.17.1.tar.gz && rm v2.17.1.tar.gz
 RUN (cd /root/nccl-tests-2.17.1 && make -j$(nproc))
+
+COPY ./nvshmem ./nvshmem
+RUN (cd /root/nvshmem && make NVSHMEM_INCLUDE_PATH=/usr/include/nvshmem NVSHMEM_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/nvshmem/13)
 
 # GDRCopy
 
@@ -48,19 +61,6 @@ case $(uname -m) in
 esac
 EOF
 
-COPY ./cuSPARSELt ./cuSPARSELt
-RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
-
-# COPY ./cuBLAS ./cuBLAS
-# RUN (cd /root/cuBLAS/gemm && cmake . && make)
-
-# # TODO: cuDSS doesn't support CUDA 13 yet
-# COPY ./cuDSS ./cuDSS
-# RUN (cd /root/cuDSS/simple && cmake . && make)
-
-COPY ./nvshmem ./nvshmem
-RUN (cd /root/nvshmem && make NVSHMEM_INCLUDE_PATH=/usr/include/nvshmem NVSHMEM_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu/nvshmem/13)
-
 # ====
 
 FROM --platform=$BUILDPLATFORM ${BASE_IMAGE}
@@ -71,10 +71,11 @@ COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/vectorAdd/vec
 COPY --from=builder /root/cuda-samples-13.0/Samples/0_Introduction/matrixMul/matrixMul ./cuda_matrixMul
 COPY --from=builder /root/cuda-samples-13.0/Samples/1_Utilities/deviceQuery/deviceQuery ./cuda_deviceQuery
 COPY --from=builder /usr/src/cudnn_samples_v9/conv_sample/conv_sample ./cudnn_conv_sample
-COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./nccl_all_reduce_perf
 COPY --from=builder /root/cuSPARSELt/matmul/matmul_example ./cuSPARSELt_matmul
-COPY --from=builder /usr/bin/apiperf ./gdrcopy_apiperf
+COPY --from=builder /root/cuBLAS/gemm/cublas_gemm_example ./cuBLAS_gemm
+COPY --from=builder /root/nccl-tests-2.17.1/build/all_reduce_perf ./nccl_all_reduce_perf
 COPY --from=builder /root/nvshmem/jacobi ./nvshmem_jacobi
+COPY --from=builder /usr/bin/apiperf ./gdrcopy_apiperf
 COPY test.sh .
 
 CMD [ "test.sh" ]

@@ -39,17 +39,21 @@ echo "=== cudnn_samples_v9/conv_sample ==="
 ./cudnn_conv_sample
 
 echo ""
-echo "=== nccl-tests/all_reduce_perf ==="
-./nccl_all_reduce_perf
-
-echo ""
-echo "=== gdrcopy/tests/apiperf ==="
-./gdrcopy_apiperf
-
-echo ""
 echo "=== cuSPARSELt/matmul ==="
 ./cuSPARSELt_matmul
 
 echo ""
+echo "=== cuBLAS/gemm ==="
+./cuBLAS_gemm
+
+echo ""
+echo "=== nccl-tests/all_reduce_perf ==="
+./nccl_all_reduce_perf
+
+echo ""
 echo "=== NVSHMEM/jacobi ==="
 mpirun --allow-run-as-root -np 1 ./nvshmem_jacobi
+
+echo ""
+echo "=== gdrcopy/tests/apiperf ==="
+./gdrcopy_apiperf
