@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "=== nvidia-smi ==="
+nvidia-smi
+
 echo "=== CUDA version files ==="
 cat /usr/local/cuda/version*
 
