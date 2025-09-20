@@ -116,6 +116,11 @@ RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
+## cuBLAS
+
+RUN apt-get -y --no-install-recommends install \
+        libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+
 ## cuDSS
 
 # # TODO: cuDSS doesn't support CUDA 13 yet

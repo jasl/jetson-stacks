@@ -51,6 +51,9 @@ EOF
 COPY ./cuSPARSELt ./cuSPARSELt
 RUN (cd /root/cuSPARSELt/matmul && make CUSPARSELT_INCLUDE_PATH=/usr/include/libcusparseLt/13 CUSPARSELT_LIB_PATH=/usr/lib/$(uname -m)-linux-gnu)
 
+# COPY ./cuBLAS ./cuBLAS
+# RUN (cd /root/cuBLAS/gemm && cmake . && make)
+
 # # TODO: cuDSS doesn't support CUDA 13 yet
 # COPY ./cuDSS ./cuDSS
 # RUN (cd /root/cuDSS/simple && cmake . && make)
