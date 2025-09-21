@@ -33,6 +33,9 @@ ENV UV_LINK_MODE=copy
 ENV VIRTUAL_ENV="/root/.venv"
 ENV PATH="/root/.venv/bin:${PATH}"
 
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install setuptools packaging build ninja
+
 # CUDA 13.0
 
 ARG CUDA_VERSION_MAJOR=13
@@ -76,7 +79,7 @@ ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
     -gencode=arch=compute_110f,code=sm_110 \
     -gencode=arch=compute_120f,code=sm_120"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV TORCH_CUDA_ARCH_LIST="8.0;9.0;10.0;11.0;12.0+PTX"
+ENV TORCH_CUDA_ARCH_LIST="8.9;9.0;10.0;11.0;12.0;12.1"
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
