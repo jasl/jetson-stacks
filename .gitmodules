@@ -1,0 +1,3 @@
+[submodule "packages/llm-base/xformers"]
+	path = packages/llm-base/xformers
+	url = https://github.com/facebookresearch/xformers.git
