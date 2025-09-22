@@ -8,12 +8,7 @@ WORKDIR /root/tmp
 # install torch nightly
 ARG PINNED_TORCH_VERSION
 RUN --mount=type=cache,target=/root/.cache/uv \
-    if [ -n "$PINNED_TORCH_VERSION" ]; then \
-      pkgs="$PINNED_TORCH_VERSION"; \
-    else \
-      pkgs="torch torchaudio torchvision"; \
-    fi && \
-    uv pip install $pkgs --pre --index-url https://download.pytorch.org/whl/nightly/cu130
+    uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install numba==0.62
