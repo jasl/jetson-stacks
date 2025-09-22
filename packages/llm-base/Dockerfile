@@ -22,7 +22,7 @@ ARG XFORMERS_COMMIT=main
 RUN git clone https://github.com/facebookresearch/xformers.git --recursive
 RUN --mount=type=cache,target=/root/.cache/ccache \
      --mount=type=cache,target=/root/.cache/uv \
-    && cd xformers \
+    cd xformers \
     && git fetch origin \
     && git checkout ${XFORMERS_COMMIT} \
     && git submodule update --init --recursive \
