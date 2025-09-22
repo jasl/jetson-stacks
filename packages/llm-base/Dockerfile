@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     else \
       pkgs="torch torchaudio torchvision"; \
     fi && \
-    uv pip install $pkgs --index-url https://download.pytorch.org/whl/nightly/cu130
+    uv pip install $pkgs --pre --index-url https://download.pytorch.org/whl/nightly/cu130
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install numba==0.62
