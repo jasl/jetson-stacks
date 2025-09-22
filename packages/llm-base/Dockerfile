@@ -21,5 +21,5 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ARG MAX_JOBS=16
 COPY ./xformers ./xformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
-     --mount=type=cache,target=/root/.cache/uv \
-    uv pip install -v --no-build-isolation -U /root/xformers
+      --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -v --no-build-isolation -U ./xformers
