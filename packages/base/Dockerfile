@@ -14,7 +14,7 @@ RUN apt-get update && \
         apt-utils apt-transport-https ca-certificates lsb-release software-properties-common \
         binutils curl wget gnupg gnupg2 nano vim zip unzip xz-utils time sshpass ssh-client \
         libnuma-dev libibverbs-dev \
-        python3 python-is-python3 python3-pip python3-venv python3-setuptools \
+        python3 python-is-python3 python3-pip python3-venv python3-setuptools python3-dev \
         git git-lfs ccache build-essential ccache cmake llvm-20 clang-20 libclang-20-dev && \
     apt-get -y autoremove
 
