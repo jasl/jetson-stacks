@@ -15,7 +15,7 @@ RUN apt-get update && \
         binutils curl wget gnupg gnupg2 nano vim zip unzip xz-utils time sshpass ssh-client \
         libnuma-dev libibverbs-dev \
         python3 python-is-python3 python3-pip python3-venv python3-setuptools \
-        git git-lfs ccache build-essential cmake llvm-20 clang-20 libclang-20-dev && \
+        git git-lfs ccache build-essential ccache cmake llvm-20 clang-20 libclang-20-dev && \
     apt-get -y autoremove
 
 # UV
