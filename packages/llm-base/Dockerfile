@@ -18,14 +18,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install numba==0.62
 
+ARG MAX_JOBS=16
 COPY ./xformers ./xformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
      --mount=type=cache,target=/root/.cache/uv \
-    cd xformers \
-    && rm -rf build \
-    && python3 setup.py bdist_wheel --dist-dir=../xformers-dist --verbose \
-    && cd .. \
-    && rm -rf xformers
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system xformers-dist/*.whl --verbose
+    uv pip install -v --no-build-isolation -U /root/xformers
