@@ -5,15 +5,16 @@ FROM --platform=$BUILDPLATFORM ${BASE_IMAGE}
 
 WORKDIR /root/tmp
 
-# install torch nightly
-ARG PINNED_TORCH_VERSION
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+ENV TORCH_CUDA_ARCH_LIST="8.9;9.0;10.0;11.0;12.0;12.1"
+ENV MAX_JOBS=16
+
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install numba==0.62
 
-ARG MAX_JOBS=16
 ENV XFORMERS_DISABLE_FLASH_ATTN_3=1
 COPY ./xformers ./xformers
 RUN --mount=type=cache,target=/root/.cache/ccache \

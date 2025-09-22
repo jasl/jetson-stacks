@@ -78,10 +78,6 @@ ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
     -gencode=arch=compute_100f,code=sm_100 \
     -gencode=arch=compute_110f,code=sm_110 \
     -gencode=arch=compute_120f,code=sm_120"
-ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV TORCH_CUDA_ARCH_LIST="8.9;9.0;10.0;11.0;12.0;12.1"
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L${CUDA_HOME}/lib64"
@@ -172,6 +168,9 @@ EOF
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /root/tmp
+
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 WORKDIR /root
 
