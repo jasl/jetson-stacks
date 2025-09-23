@@ -164,15 +164,16 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /root/tmp
 
-ENV CUDA_ARCH_LIST="89;100;110;120;121"
+ENV CUDA_ARCH_LIST="89;90;100;110;120;121"
 ENV CUDAARCHS="${CUDA_ARCH_LIST}"
 ENV CUDA_ARCHITECTURES="${CUDA_ARCH_LIST}"
 ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
+    -gencode=arch=compute_90f,code=sm_90 \
     -gencode=arch=compute_100f,code=sm_100 \
     -gencode=arch=compute_110f,code=sm_110 \
     -gencode=arch=compute_120f,code=sm_120"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV TORCH_CUDA_ARCH_LIST="8.9;10.0;11.0;12.0;12.1"
+ENV TORCH_CUDA_ARCH_LIST="8.9;9.0;10.0;11.0;12.0;12.1"
 
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
