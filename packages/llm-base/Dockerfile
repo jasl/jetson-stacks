@@ -14,12 +14,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY ./xformers ./xformers
 ARG XFORMERS_DISABLE_FLASH_ATTN_3=1
 ARG XFORMERS_MORE_DETAILS=1
-RUN --mount=type=cache,target=/root/.cache/ccache \
-      --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --no-build-isolation -U ./xformers
 # RUN --mount=type=cache,target=/root/.cache/ccache \
 #       --mount=type=cache,target=/root/.cache/uv \
-#     cd xformers \
-#     && rm -rf build \
-#     && python3 setup.py bdist_wheel --dist-dir=./dist --verbose \
-#     && uv pip install ./dist/*.whl --verbose
+#     uv pip install --no-build-isolation -U ./xformers
+RUN --mount=type=cache,target=/root/.cache/ccache \
+      --mount=type=cache,target=/root/.cache/uv \
+    cd xformers \
+    && rm -rf build \
+    && python3 setup.py bdist_wheel --dist-dir=./dist --verbose \
+    && uv pip install ./dist/*.whl --verbose
