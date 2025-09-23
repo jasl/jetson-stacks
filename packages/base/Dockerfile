@@ -38,6 +38,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ARG max_jobs=16
 ENV MAX_JOBS=${max_jobs}
+ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
 ENV CCACHE_DIR=/root/.cache/ccache
 
 # CUDA 13.0
