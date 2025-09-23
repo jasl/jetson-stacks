@@ -36,6 +36,10 @@ ENV PATH="/root/.venv/bin:${PATH}"
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install setuptools packaging build ninja
 
+ARG max_jobs=16
+ENV MAX_JOBS=${max_jobs}
+ENV CCACHE_DIR=/root/.cache/ccache
+
 # CUDA 13.0
 
 ARG CUDA_VERSION_MAJOR=13
@@ -60,11 +64,7 @@ EOF
 RUN apt-get update && \
     apt-get -y install cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
 
-ENV CUDA_ARCH_LIST="89;90;100;110;120;121"
 ENV CUDA_HOME="/usr/local/cuda"
-
-ENV CUDAARCHS="${CUDA_ARCH_LIST}"
-ENV CUDA_ARCHITECTURES="${CUDA_ARCH_LIST}"
 ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"
 ENV CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}"
 ENV CUDA_BIN_PATH="${CUDA_HOME}/bin"
@@ -72,12 +72,6 @@ ENV NVCC_PATH="${CUDA_BIN_PATH}/nvcc"
 ENV CMAKE_CUDA_COMPILER="${NVCC_PATH}"
 ENV CUDA_NVCC_EXECUTABLE="${NVCC_PATH}"
 ENV CUDACXX="${NVCC_PATH}"
-
-ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
-    -gencode=arch=compute_90,code=sm_90 \
-    -gencode=arch=compute_100f,code=sm_100 \
-    -gencode=arch=compute_110f,code=sm_110 \
-    -gencode=arch=compute_120f,code=sm_120"
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L${CUDA_HOME}/lib64"
@@ -168,6 +162,16 @@ EOF
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /root/tmp
+
+ENV CUDA_ARCH_LIST="89;100;110;120;121"
+ENV CUDAARCHS="${CUDA_ARCH_LIST}"
+ENV CUDA_ARCHITECTURES="${CUDA_ARCH_LIST}"
+ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
+    -gencode=arch=compute_100f,code=sm_100 \
+    -gencode=arch=compute_110f,code=sm_110 \
+    -gencode=arch=compute_120f,code=sm_120"
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+ENV TORCH_CUDA_ARCH_LIST="8.9;10.0;11.0;12.0;12.1"
 
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
