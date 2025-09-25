@@ -12,6 +12,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install numba==0.62
 
 COPY ./xformers ./xformers
+ARG XFORMERS_DISABLE_FLASH_ATTN_3=1
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     uv pip install --no-build-isolation --verbose -U ./xformers
