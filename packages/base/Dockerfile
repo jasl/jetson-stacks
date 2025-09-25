@@ -34,7 +34,7 @@ ENV VIRTUAL_ENV="/root/.venv"
 ENV PATH="/root/.venv/bin:${PATH}"
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install setuptools packaging build ninja
+    uv pip install setuptools packaging build ninja pybind11
 
 ARG max_jobs=16
 ENV MAX_JOBS=${max_jobs}
