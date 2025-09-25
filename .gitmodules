@@ -1,3 +1,6 @@
 [submodule "packages/llm-base/xformers"]
 	path = packages/llm-base/xformers
 	url = https://github.com/jasl/xformers.git
+[submodule "packages/llm-base/triton"]
+	path = packages/llm-base/triton
+	url = https://github.com/triton-lang/triton.git
