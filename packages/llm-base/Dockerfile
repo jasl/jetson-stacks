@@ -48,6 +48,9 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install -U "huggingface_hub[cli]"
 
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -U modelscope
+
 WORKDIR /root
 
 # Clean up
