@@ -21,6 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY ./triton ./triton
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
+      --mount=type=cache,target=/root/.triton \
     uv pip install --no-build-isolation --verbose -U ./triton
 
 COPY ./xformers ./xformers
