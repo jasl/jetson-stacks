@@ -7,7 +7,7 @@ ENV TRITON_PTXAS_PATH="${CUDA_HOME}/bin/ptxas"
 
 ENV TORCH_CUDA_ARCH_LIST="8.9;9.0;10.0;11.0;12.0"
 ENV FLASHINFER_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
-ENV UV_TORCH_BACKEND=auto
+ENV UV_TORCH_BACKEND=cu130
 
 ARG max_jobs=16
 ENV MAX_JOBS=${max_jobs}
@@ -16,7 +16,7 @@ ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
 WORKDIR /root/tmp
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
+    uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu130
 
 COPY ./triton ./triton
 RUN --mount=type=cache,target=/root/.cache/ccache \
