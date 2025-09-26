@@ -4,3 +4,6 @@
 [submodule "packages/llm-base/triton"]
 	path = packages/llm-base/triton
 	url = https://github.com/triton-lang/triton.git
+[submodule "packages/llm-base/transformers"]
+	path = packages/llm-base/transformers
+	url = https://github.com/huggingface/transformers.git

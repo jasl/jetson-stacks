@@ -24,3 +24,8 @@ COPY ./xformers ./xformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     uv pip install --no-build-isolation --verbose -U ./xformers
+
+COPY ./transformers ./transformers
+RUN --mount=type=cache,target=/root/.cache/ccache \
+      --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --no-build-isolation --verbose -U ./transformers[torch]
