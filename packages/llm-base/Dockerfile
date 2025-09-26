@@ -45,12 +45,6 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     uv pip install --no-build-isolation --verbose -U ./transformers[torch]
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install -U "huggingface_hub[cli]"
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install -U modelscope
-
 WORKDIR /root
 
 # Clean up
