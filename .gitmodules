@@ -7,3 +7,9 @@
 [submodule "packages/llm-base/transformers"]
 	path = packages/llm-base/transformers
 	url = https://github.com/huggingface/transformers.git
+[submodule "packages/llm-base/flashinfer"]
+	path = packages/llm-base/flashinfer
+	url = https://github.com/flashinfer-ai/flashinfer.git
+[submodule "packages/llm-base/flash-attention"]
+	path = packages/llm-base/flash-attention
+	url = https://github.com/Dao-AILab/flash-attention.git
