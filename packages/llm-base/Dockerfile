@@ -29,3 +29,16 @@ COPY ./transformers ./transformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     uv pip install --no-build-isolation --verbose -U ./transformers[torch]
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -U "huggingface_hub[cli]"
+
+# Clean up
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /root/tmp
+
+WORKDIR /root
+
+ENTRYPOINT [ "/bin/bash" ]
