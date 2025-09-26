@@ -16,7 +16,7 @@ ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
 WORKDIR /root/tmp
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --pre torch torchvision torchaudio torch-tensorrt tensorrt --index-url https://download.pytorch.org/whl/nightly/cu130
+    uv pip install --pre torch=2.9.0 torchvision torchaudio torch-tensorrt tensorrt --index-url https://download.pytorch.org/whl/nightly/cu130
 
 COPY ./triton ./triton
 RUN --mount=type=cache,target=/root/.cache/ccache \
