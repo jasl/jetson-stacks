@@ -36,11 +36,6 @@ ENV PATH="/root/.venv/bin:${PATH}"
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install setuptools packaging build ninja pybind11 lit wheel cmake
 
-ARG max_jobs=16
-ENV MAX_JOBS=${max_jobs}
-ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
-ENV CCACHE_DIR=/root/.cache/ccache
-
 # CUDA 13.0
 
 ARG CUDA_VERSION_MAJOR=13
@@ -176,6 +171,8 @@ ENV TORCH_CUDA_ARCH_LIST="8.9;10.0;11.0;12.0;12.1"
 
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+ENV CCACHE_DIR=/root/.cache/ccache
 
 WORKDIR /root
 

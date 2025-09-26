@@ -11,6 +11,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
 
+ARG max_jobs=16
+ENV MAX_JOBS=${max_jobs}
+ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
+
 COPY ./triton ./triton
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
