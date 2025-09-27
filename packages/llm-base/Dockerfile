@@ -61,7 +61,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
         nvidia-cudnn-cu${CUDA_VERSION_MAJOR} nvidia-cudnn-frontend \
         nvidia-cusparselt-cu${CUDA_VERSION_MAJOR} \
         cutensor-cu${CUDA_VERSION_MAJOR} \
-        nvshmem-cuda-${CUDA_VERSION_MAJOR} openmpi-bin libopenmpi-dev
+        nvidia-nvshmem-cu${CUDA_VERSION_MAJOR} nvshmem4py-cu${CUDA_VERSION_MAJOR}
 
 WORKDIR /root
 
