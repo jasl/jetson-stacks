@@ -87,7 +87,7 @@ RUN apt-get install -y --no-install-recommends \
     cuda-nsight-compute-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl
+    uv pip install -U cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"
@@ -126,14 +126,14 @@ RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || 
 RUN apt-get -y --no-install-recommends install \
         libcudnn9-cuda-${CUDA_VERSION_MAJOR} libcudnn9-dev-cuda-${CUDA_VERSION_MAJOR}
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install nvidia-cudnn-cu${CUDA_VERSION_MAJOR} nvidia-cudnn-frontend
+    uv pip install -U nvidia-cudnn-cu${CUDA_VERSION_MAJOR} nvidia-cudnn-frontend
 
 ## cuSPARSELt
 
 RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install nvidia-cusparselt-cu${CUDA_VERSION_MAJOR}
+    uv pip install -U nvidia-cusparselt-cu${CUDA_VERSION_MAJOR}
 
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
@@ -147,14 +147,14 @@ RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-li
 RUN apt-get -y --no-install-recommends install \
         cutensor-cuda-${CUDA_VERSION_MAJOR}
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install cutensor-cu${CUDA_VERSION_MAJOR}
+    uv pip install -U cutensor-cu${CUDA_VERSION_MAJOR}
 
 ## NVSHMEM
 
 RUN apt-get -y --no-install-recommends install \
         nvshmem-cuda-${CUDA_VERSION_MAJOR} openmpi-bin libopenmpi-dev
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install nvidia-nvshmem-cu${CUDA_VERSION_MAJOR} nvshmem4py-cu${CUDA_VERSION_MAJOR}
+    uv pip install -U nvidia-nvshmem-cu${CUDA_VERSION_MAJOR} nvshmem4py-cu${CUDA_VERSION_MAJOR}
 
 # GDRCopy
 
@@ -185,7 +185,7 @@ fi
 EOF
 RUN --mount=type=cache,target=/root/.cache/uv <<EOF
 if [ "$(uname -m)" = aarch64 ]; then
-    uv pip install nvpl
+    uv pip install -U nvpl
 fi
 EOF
 
