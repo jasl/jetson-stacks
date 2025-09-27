@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
 COPY ./transformers ./transformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --no-build-isolation --verbose -U ./transformers[torch]
+    uv pip install --no-build-isolation --verbose -U "./transformers[torch]"
 
 WORKDIR /root
 
