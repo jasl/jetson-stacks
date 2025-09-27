@@ -38,7 +38,7 @@ ENV VIRTUAL_ENV="/root/.venv"
 ENV PATH="/root/.venv/bin:${PATH}"
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install -U setuptools packaging pytest wheel build ninja cmake pybind11 lit filelock requests
+    uv pip install -U setuptools packaging pytest wheel build ninja cmake pybind11 lit filelock requests responses
 
 # Nvidia APT source
 ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb ./sbsa-cuda-keyring_1.1-1_all.deb
