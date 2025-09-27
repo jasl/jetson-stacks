@@ -3,8 +3,8 @@
 echo "=== nvidia-smi ==="
 nvidia-smi
 
-echo "=== CUDA version files ==="
-cat /usr/local/cuda/version*
+# echo "=== CUDA version files ==="
+# cat /usr/local/cuda/version*
 
 echo ""
 echo "=== Location of nvcc ==="
