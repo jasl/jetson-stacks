@@ -18,6 +18,10 @@ RUN apt-get update && \
         git git-lfs ccache build-essential ccache cmake llvm-20 clang-20 libclang-20-dev && \
     apt-get -y autoremove
 
+# Setup CCACHE
+
+ENV CCACHE_DIR=/root/.cache/ccache
+
 # UV
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -34,13 +38,9 @@ ENV VIRTUAL_ENV="/root/.venv"
 ENV PATH="/root/.venv/bin:${PATH}"
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install setuptools packaging build ninja pybind11 lit wheel cmake mpi4py filelock
+    uv pip install setuptools packaging pytest wheel build ninja cmake pybind11 lit filelock requests
 
-# CUDA 13.0
-
-ARG CUDA_VERSION_MAJOR=13
-ARG CUDA_VERSION_MINOR=0
-
+# Nvidia APT source
 ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb ./sbsa-cuda-keyring_1.1-1_all.deb
 ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb ./x86_64-cuda-keyring_1.1-1_all.deb
 RUN <<EOF
@@ -57,8 +57,16 @@ case $(uname -m) in
         ;;
 esac
 EOF
-RUN apt-get update && \
-    apt-get -y install cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+RUN apt-get update
+
+# CUDA 13.0
+
+ENV CUDA_VERSION_MAJOR=13
+ENV CUDA_VERSION_MINOR=0
+
+RUN apt-get -y install cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install cuda-python
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"
@@ -93,17 +101,24 @@ RUN ln -sf ${CUDA_HOME}/lib64/stubs/libcuda.so ${CUDA_HOME}/lib64/libcuda.so || 
 
 RUN apt-get -y --no-install-recommends install \
         libcudnn9-cuda-${CUDA_VERSION_MAJOR} libcudnn9-dev-cuda-${CUDA_VERSION_MAJOR}
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install nvidia-cudnn-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl nvidia-cudnn-frontend
 
 ## cuSPARSELt
 
 RUN apt-get -y --no-install-recommends install \
         cusparselt-cuda-${CUDA_VERSION_MAJOR}
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install nvidia-cusparselt-cu${CUDA_VERSION_MAJOR}
+
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
 ## cuBLAS
 
 RUN apt-get -y --no-install-recommends install \
         libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install nvidia-cublas
 
 ## cuDSS
 
@@ -114,16 +129,22 @@ RUN apt-get -y --no-install-recommends install \
 ## cuTensor
 RUN apt-get -y --no-install-recommends install \
         cutensor-cuda-${CUDA_VERSION_MAJOR}
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install cutensor-cu${CUDA_VERSION_MAJOR}
 
 # NCCL
 
 RUN apt-get -y --no-install-recommends install \
         libnccl2 libnccl-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install nvidia-nccl-cu${CUDA_VERSION_MAJOR}
 
 ## NVSHMEM
 
 RUN apt-get -y --no-install-recommends install \
         nvshmem-cuda-${CUDA_VERSION_MAJOR} openmpi-bin libopenmpi-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install nvidia-nvshmem-cu${CUDA_VERSION_MAJOR} nvshmem4py-cu${CUDA_VERSION_MAJOR}
 
 # GDRCopy
 
@@ -152,12 +173,19 @@ if [ "$(uname -m)" = aarch64 ]; then
         nvpl
 fi
 EOF
+RUN --mount=type=cache,target=/root/.cache/uv <<EOF
+if [ "$(uname -m)" = aarch64 ]; then
+    uv pip install nvpl
+fi
+EOF
 
 # Clean up
 
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /root/tmp
+
+# Setup ENVs
 
 ENV CUDA_ARCH_LIST="89;100;110;120;121"
 ENV CUDAARCHS="${CUDA_ARCH_LIST}"
@@ -169,8 +197,6 @@ ENV NVCC_GENCODE="-gencode=arch=compute_89,code=sm_89 \
 
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-
-ENV CCACHE_DIR=/root/.cache/ccache
 
 WORKDIR /root
 

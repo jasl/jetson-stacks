@@ -35,6 +35,8 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
     MAX_JOBS=$((($MAX_JOBS + 1) / 4)) uv pip install --no-build-isolation --verbose -U ./flash-attention
 
 COPY ./flashinfer ./flashinfer
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install mpi4py apache-tvm-ffi
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     cd ./flashinfer \
