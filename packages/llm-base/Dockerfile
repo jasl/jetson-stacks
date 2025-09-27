@@ -70,7 +70,7 @@ WORKDIR /root
 
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /root/tmp && \
+    && rm -rf /root/tmp \
     && rm -rf /root/.cache
 
 ENTRYPOINT [ "/bin/bash" ]
