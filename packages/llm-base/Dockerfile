@@ -44,9 +44,8 @@ COPY ./flashinfer ./flashinfer
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
     cd ./flashinfer \
-    && python -m flashinfer.aot \
-    && FLASHINFER_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} \
-        uv pip install --no-build-isolation --verbose -U .
+    && FLASHINFER_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST//;/ } python -m flashinfer.aot \
+    && FLASHINFER_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST//;/ } uv pip install --no-build-isolation --verbose -U .
 
 COPY ./transformers ./transformers
 RUN --mount=type=cache,target=/root/.cache/ccache \
