@@ -64,9 +64,31 @@ RUN apt-get update
 ENV CUDA_VERSION_MAJOR=13
 ENV CUDA_VERSION_MINOR=0
 
-RUN apt-get -y install cuda-toolkit-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+RUN apt-get install -y --no-install-recommends \
+    cuda-cudart-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-compat-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libnpp-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-nvtx-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libcusparse-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libcublas-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libnccl2-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+
+RUN apt-get install -y --no-install-recommends \
+    cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-minimal-build-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-command-line-tools-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libnpp-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libcusparse-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libnccl-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    cuda-nsight-compute-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+
+
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install cuda-python
+    uv pip install cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR}
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"
@@ -79,6 +101,9 @@ ENV CUDACXX="${NVCC_PATH}"
 
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64"
 ENV LDFLAGS="-L${CUDA_HOME}/lib64"
+
+# Required for nvidia-docker v1
+RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
 # === Fix -lcuda and CCCL includes ===
 # Ensure that the linker searches stubs first and keeps previous flags
@@ -113,13 +138,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libcusparseLt.a /usr/lib/$(uname -m)-linux-gnu/libcusparseLt_static.a
 
-## cuBLAS
-
-RUN apt-get -y --no-install-recommends install \
-        libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install nvidia-cublas
-
 ## cuDSS
 
 # # TODO: cuDSS doesn't support CUDA 13 yet
@@ -131,13 +149,6 @@ RUN apt-get -y --no-install-recommends install \
         cutensor-cuda-${CUDA_VERSION_MAJOR}
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install cutensor-cu${CUDA_VERSION_MAJOR}
-
-# NCCL
-
-RUN apt-get -y --no-install-recommends install \
-        libnccl2 libnccl-dev
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install nvidia-nccl-cu${CUDA_VERSION_MAJOR}
 
 ## NVSHMEM
 
