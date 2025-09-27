@@ -87,7 +87,7 @@ RUN apt-get install -y --no-install-recommends \
     cuda-nsight-compute-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install -U cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl
+    uv pip install -U cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl nvidia-ml-py
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV CUDA_TOOLKIT_PATH="${CUDA_HOME}"

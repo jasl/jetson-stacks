@@ -58,7 +58,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install -U \
         mpi4py apache-tvm-ffi numpy scipy numba einops \
-        cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl \
+        cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR} nvidia-cutlass-dsl nvidia-ml-py \
         nvidia-cudnn-cu${CUDA_VERSION_MAJOR} nvidia-cudnn-frontend \
         nvidia-cusparselt-cu${CUDA_VERSION_MAJOR} \
         cutensor-cu${CUDA_VERSION_MAJOR} \
