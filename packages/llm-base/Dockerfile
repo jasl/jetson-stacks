@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/root/.cache/ccache \
 COPY ./flash-attention ./flash-attention
 RUN --mount=type=cache,target=/root/.cache/ccache \
       --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --no-build-isolation --verbose -U ./flash-attention
+    MAX_JOBS=$((($MAX_JOBS + 1) / 4)) uv pip install --no-build-isolation --verbose -U ./flash-attention
 
 COPY ./flashinfer ./flashinfer
 RUN --mount=type=cache,target=/root/.cache/ccache \
