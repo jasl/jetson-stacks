@@ -19,7 +19,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --pre torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install mpi4py apache-tvm-ffi
+    uv pip install mpi4py apache-tvm-ffi numpy scipy numba einops
 
 COPY ./triton ./triton
 RUN --mount=type=cache,target=/root/.cache/ccache \
