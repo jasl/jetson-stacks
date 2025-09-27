@@ -72,7 +72,7 @@ RUN apt-get install -y --no-install-recommends \
     cuda-nvtx-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
     libcusparse-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
     libcublas-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
-    libnccl2-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
+    libnccl2
 
 RUN apt-get install -y --no-install-recommends \
     cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
@@ -83,9 +83,8 @@ RUN apt-get install -y --no-install-recommends \
     libnpp-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
     libcusparse-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
     libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
-    libnccl-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} \
+    libnccl-dev \
     cuda-nsight-compute-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR}
-
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install cuda-python nvidia-cublas nvidia-nccl-cu${CUDA_VERSION_MAJOR}
