@@ -13,10 +13,13 @@ ARG max_jobs=16
 ENV MAX_JOBS=${max_jobs}
 ENV CMAKE_BUILD_PARALLEL_LEVEL=${max_jobs}
 
+ARG nvcc_threads=1
+ENV NVCC_THREADS=${nvcc_threads}
+
 WORKDIR /root/tmp
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install mpi4py apache-tvm-ffi numpy scipy numba einops
+    uv pip install -U mpi4py apache-tvm-ffi numpy scipy numba einops
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --pre torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu130
